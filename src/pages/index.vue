@@ -1,11 +1,15 @@
 <template>
   <div class="p-2 m-2 text-3xl font-bold">
-    <div class="text-center text-xl mb-10 font-medium">fall 2024 grades</div>
-
+    <div class="text-center text-xl mb-10 font-medium">grades | fall 2024</div>
     <table
       class="w-1/2 mx-auto border-separate border-spacing-x-10 border-spacing-y-3"
     >
       <tr v-for="course in courses" :key="course.name" class="cursor-pointer">
+        <Modal
+          :show="course.assignmentsVisible"
+          :course="course"
+          @close="course.assignmentsVisible = false"
+        />
         <td
           class="rounded hover:bg-gray-100 p-2"
           @click="course.assignmentsVisible = true"
@@ -26,13 +30,9 @@
             }}
           </div>
         </td>
-        <Modal
-          :show="course.assignmentsVisible"
-          :course="course"
-          @close="course.assignmentsVisible = false"
-        />
       </tr>
     </table>
+    <div class = 'text-sm font-medium text-center w-1/2 m-auto mt-10'> Disclaimer: These course averages are simply approximations and will not always reflect your class grade, but rather an idea of where you stand in the class. </div>
   </div>
 </template>
 
@@ -52,17 +52,16 @@ export default {
   async created() {
     let data = await $fetch("/api/courses/all");
     for (let course of data) {
-      course.assignmentsVisible = false;
+        course.assignmentsVisible = false;
     }
-
+    
     this.courses = data;
   },
   methods: {
     getAverageColor(average) {
       if (average == 0) {
         return "bg-slate-600";
-      }
-      else if (average >= 93) {
+      } else if (average >= 93) {
         return "bg-green-700";
       } else if (average >= 90) {
         return "bg-green-500";

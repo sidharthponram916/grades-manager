@@ -12,7 +12,7 @@ export interface Assignment extends Course {
     name: String; 
     category: String; 
     grade: Number; 
-    points: Number; 
+    percentage: Number; 
 }
 
 const courseSchema = new Schema({ 
